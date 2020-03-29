@@ -1,4 +1,4 @@
-// получаємо елементи зі сторінки
+// get elements from page
 const formSearch = document.querySelector('.form-search'),
 	inputCitiesFrom = formSearch.querySelector('.input__cities-from'),
 	dropdownCitiesFrom = formSearch.querySelector('.dropdown__cities-from'),
@@ -6,13 +6,14 @@ const formSearch = document.querySelector('.form-search'),
 	dropdownCitiesTo = formSearch.querySelector('.dropdown__cities-to'),
 	inputDateDepart = formSearch.querySelector('.input__date-depart'),
 	cheapestTicket = document.getElementById('cheapest-ticket'),
-	otherCheapTickets = document.getElementById('other-cheap-tickets');
+	otherCheapTickets = document.getElementById('other-cheap-tickets'),
+	modalWindow = document.querySelector('#modal-window'),
+	modalClose = document.querySelector('.modal-close'),
+	modalText = document.querySelector('.modal-text');
 
-//дані:
+//data:
 //const citiesApi = 'http://api.travelpayouts.com/data/en/cities.json',
-//const citiesApi = 'http://api.travelpayouts.com/data/ru/cities.json',
 const citiesApi = 'dataBase/cities(en).json',
-// const citiesApi = 'dataBase/cities(ru).json',
 	proxy = 'https://cors-anywhere.herokuapp.com/',
 	API_KEY = 'fb83fbb51ec78362a1f00aafeb7e5439',
 	calendar = 'http://min-prices.aviasales.ru/calendar_preload',
@@ -20,53 +21,53 @@ const citiesApi = 'dataBase/cities(en).json',
 
 let city = [];
 
-//функції
+//functions
 const getData = (url, callback, reject = console.error) => {
-	const request = new XMLHttpRequest();						//створюємо об'єкт для запиту на основі XmlHttpRequest
-	request.open('GET', url);										//налаштовуємо запит, який в нас запит буде і куда відправляємо
+	const request = new XMLHttpRequest();
+	request.open('GET', url);
 
-	request.addEventListener('readystatechange', () => {	//readystatechange відслідковує зміну статусу, щоб не пропустити момент коли до нас прийде відповідь
+	request.addEventListener('readystatechange', () => {
 		if (request.readyState !== 4) return;
 
-		if (request.status === 200) {								//перевіряємо відповідь статуса від сервера
-			callback(request.response);							//в разі true виконуємо callback ф-ю
+		if (request.status === 200) {
+			callback(request.response);
 		} else {
-			reject(request.status);						//у випадку false виводимо в консоль помилку
+			reject(request.status);
 		}
 	});
-	request.send(); // відправляємо запит
+	request.send();
 };
 
 const showCity = (input, list) => {
-	list.textContent = '';																//очищаємо список перед створенням нового
+	list.textContent = '';
 
-	if (input.value === '') return;													//якщо input пустий не створюємо список
-	const filterCity = city.filter((item) => {			//перебираємо кожне місто і співставляємо з тим, що написав користувач
-		const fixItem = item.name.toLowerCase(); 							//всі міста переводимо в нихній регістр
-		return fixItem.startsWith(input.value.toLowerCase());			//перевіряємо чи є місто з символами введеними в input
+	if (input.value === '') return;
+	const filterCity = city.filter((item) => {
+		const fixItem = item.name.toLowerCase();
+		return fixItem.startsWith(input.value.toLowerCase());
 	})
 
-	filterCity.forEach((item) => {												//для міст, що були відібрані
-		const li = document.createElement('li');								//ствоюємо li
-		li.classList.add('dropdown__city');										//додаємо клас до li
-		li.textContent = item.name;												//записуємо в це li відібране місто
+	filterCity.forEach((item) => {
+		const li = document.createElement('li');
+		li.classList.add('dropdown__city');
+		li.textContent = `${item.name}, ${item.code}`;
 		list.append(li);
 	})
 };
 
 const selectCity = (event, input, list) => {
 	const target = event.target;
-	if (target.tagName.toLowerCase() !== 'li') return;							//якщо клік відбувся не по li зупиняємо ф-ію
-	input.value = target.textContent;												//заповнюємо вказаний input текстом в li
-	list.textContent = '';																//очищаємо вказаний list після виконання ф-ії
+	if (target.tagName.toLowerCase() !== 'li') return;
+	input.value = target.textContent;
+	list.textContent = '';
 };
 
-const getNameCity = (code) => {											//ф-я для отримання назви міста через код міста
-	const objCity = city.find((item) => item.code === code);		//перебираємо кожне місто, і порівнюємо його код з переданим кодом, передаємо в objCity
-	return objCity.name;														//отримуємо з цього об'єкта name і повертаємо
+const getNameCity = (code) => {
+	const objCity = city.find((item) => item.code === code);
+	return objCity.name;
 };
 
-const getDate = (date) => {												//ф-я створює дату у вказаному форматі
+const getDate = (date) => {
 	return new Date(date).toLocaleString('uk', {
 		year: 'numeric',
 		month: 'numeric',
@@ -78,13 +79,13 @@ const getDate = (date) => {												//ф-я створює дату у вка
 
 const getChanges = (num) => {
 	if (num) {
-		return num === 1 ? 'З одною пересадкою' : 'З двома пересадками';
+		return num === 1 ? 'With one change' : 'With two changes';
 	} else {
-		return 'Без пересадок';
+		return 'Without changes';
 	}
 };
 
-const getLinkAviasales = (data) => {						//створюємо посилання для перегляду квитків по кнопці "Знайти білети"
+const getLinkAviasales = (data) => {
 	let link = 'https://www.aviasales.ru/search/';
 	link += data.origin;
 	const date = new Date(data.depart_date);
@@ -100,22 +101,22 @@ const getLinkAviasales = (data) => {						//створюємо посиланн�
 	return link;
 };
 
-const createCard = (data) => {										//ф-я створює карточку з інфою про квиток
-	const ticket = document.createElement('article');			//стврюємо тег artickle
-	ticket.classList.add('ticket');									//додаємо до нього клас
+const createCard = (data) => {
+	const ticket = document.createElement('article');
+	ticket.classList.add('ticket');
 
 	let deep = '';
-	if (data) {																//якщо квиток існує створюємо карточку
+	if (data) {
 		deep = `
 			<h3 class="agent">${data.gate}</h3>
 			<div class="ticket__wrapper">
 				<div class="left-side">
-					<a href="${getLinkAviasales(data)}" target="_blank" class="button button__buy">Купити
-						за ${data.value}₽</a>
+					<a href="${getLinkAviasales(data)}" target="_blank" class="button button__buy">Buy
+						for ${Math.round(data.value)}$</a>
 				</div>
 				<div class="right-side">
 					<div class="block-left">
-						<div class="city__from">Виліт з міста
+						<div class="city__from">Departure from the city of
 							<span class="city__name">${getNameCity(data.origin)}</span>
 						</div>
 						<div class="date">${getDate(data.depart_date)}</div>
@@ -123,7 +124,7 @@ const createCard = (data) => {										//ф-я створює карточку 
 		
 					<div class="block-right">
 						<div class="changes">${getChanges(data.number_of_chages)}</div>
-						<div class="city__to">Місто призначення:
+						<div class="city__to">Destination city:
 							<span class="city__name">${getNameCity(data.destination)}</span>
 						</div>
 					</div>
@@ -131,22 +132,22 @@ const createCard = (data) => {										//ф-я створює карточку 
 			</div>
 		`;
 	} else {
-		deep = '<h3>На жаль, на поточну дату білетів не знайшлось.</h3>'
+		deep = '<h3>Unfortunately, no tickets were found at the current date.</h3>'
 	}
-	ticket.insertAdjacentHTML('afterbegin', deep);								//вставляємо верстку в html
+	ticket.insertAdjacentHTML('afterbegin', deep);
 	return ticket;
 };
 
-const renderCheapDay = (cheapTicket) => {										//створює карточку з квитком і вставляє в секцію cheapestTicket
-	cheapestTicket.innerHTML = '<h2>Найдешевші білети на цю дату</h2>';
+const renderCheapDay = (cheapTicket) => {
+	cheapestTicket.innerHTML = '<h2>Cheapest tickets on this date</h2>';
 
 	const ticket =  createCard(cheapTicket[0]);
 	cheapestTicket.append(ticket);
 };
 
 const renderCheapYear = (cheapTickets) => {
-	otherCheapTickets.innerHTML = '<h2>Найдешевші білети на інші дати</h2> ';
-	cheapTickets.sort((a, b) => {													//сортування за датою виліту (сортування працює і з числами, і з стрічками)
+	otherCheapTickets.innerHTML = '<h2>Cheapest tickets on other dates</h2> ';
+	cheapTickets.sort((a, b) => {
 		if (a.depart_date > b.depart_date) {
 			return 1;
 		}
@@ -155,7 +156,6 @@ const renderCheapYear = (cheapTickets) => {
 		}
 		return 0;
 	});
-	//cheapTickets.sort((a, b) => a.value - b.value);						//сортування за ціною, таке сортування спрацює тільки з числами
 	
 	for (let i = 0; i < cheapTickets.length && i < MAX_COUNT; i++) {
 		const ticket = createCard(cheapTickets[i]);
@@ -174,50 +174,67 @@ const renderCheap = (data, date) => {
 	renderCheapYear(cheapTicketsYear);
 };
 
-//обробники подій
-inputCitiesFrom.addEventListener('input', () => {								// додаємо слідкування на введення символа в inputCitiesFrom і запускаємо ф-ію
-	showCity(inputCitiesFrom, dropdownCitiesFrom)								//не можна зразу викликати ф-ію showCity, бо вона викличеться на першій стадії інтерпретації
+//events handlers
+inputCitiesFrom.addEventListener('input', () => {
+	showCity(inputCitiesFrom, dropdownCitiesFrom)
 });
 
 dropdownCitiesFrom.addEventListener('click', (event) => {
 	selectCity(event, inputCitiesFrom, dropdownCitiesFrom)
 });
 
-inputCitiesTo.addEventListener('input', () => {								// додаємо слідкування на введення символа в inputCitiesFrom і запускаємо ф-ію
-	showCity(inputCitiesTo, dropdownCitiesTo)								//не можна зразу викликати ф-ію showCity, бо вона викличеться на першій стадії інтерпретації
+inputCitiesTo.addEventListener('input', () => {
+	showCity(inputCitiesTo, dropdownCitiesTo)
 });
 
 dropdownCitiesTo.addEventListener('click', (event) => {
 	selectCity(event, inputCitiesTo, dropdownCitiesTo)
 });
 
-formSearch.addEventListener('submit', (event) => {	//при submit (відправка) fromSearch
-	event.preventDefault();										// прибираємо перезавантаження сторінки
+formSearch.addEventListener('submit', (event) => {
+	event.preventDefault();
 	const formData = {
-		from: city.find(item => inputCitiesFrom.value === item.name), //порівнюємо введені дані з назвою міста і повертаємо зайдене ОДНЕ значення !filter повернув би массив
+		from: city.find(item => inputCitiesFrom.value === item.name),
 		to: city.find(item => inputCitiesTo.value === item.name),
 		when: inputDateDepart.value,
 	}
 
 	if (formData.from && formData.to) {
-		const requestData = `?origin=${formData.from.code}&destination=${formData.to.code}&depart_date=${formData.when}&one_way=true`;
+		const requestData = `?origin=${formData.from.code}&destination=${formData.to.code}&depart_date=${formData.when}&one_way=true&currency=usd&lang=uk`;
 
-		getData(calendar + requestData, (response) => { 			// отримуємо дані з сервера про білет на вказані користувачем дані
+		getData(calendar + requestData, (response) => {
 			renderCheap(response, formData.when);
 		}, error => {
-			alert('В цьому напрямку немає рейсів.');
-			console.error('Помилка', error);
+			cheapestTicket.textContent = '';
+			otherCheapTickets.textContent = '';
+			modalText.innerHTML = 'No flights in this direction.';
+			modalWindow.style.display = "block";
+			console.error('Error', error);
 		});
 	} else {
-		alert('Введіть коректну назву міста!')
+		cheapestTicket.textContent = '';
+		otherCheapTickets.textContent = '';
+		modalText.innerHTML = 'Enter the correct city name!';
+		modalWindow.style.display = "block";
 	}
 });
 
-//виклики функцій
+window.addEventListener('click', () => {
+	dropdownCitiesFrom.textContent = '';
+	dropdownCitiesTo.textContent = '';
+	if (event.target === modalWindow) {
+		modalWindow.style.display = "none";
+	 } 
+});
+modalClose.addEventListener('click', () => {
+	modalWindow.style.display = "none";
+ });
+
+//functions call
 getData(/*proxy + */citiesApi, (data) => {
 	city = JSON.parse(data).filter((item) => item.name);
 
-	city.sort((a, b) => {													//сортування виведених міст по алфавіту
+	city.sort((a, b) => {
 		if (a.name > b.name) {
 			return 1;
 		}

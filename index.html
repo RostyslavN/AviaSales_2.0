@@ -7,6 +7,7 @@
 	<title>AviaSales</title>
 	<link rel="stylesheet" href="style.css">
 	<link rel="shortcut icon" href="./img/icon.png" type="image/png">
+	<link href="https://fonts.googleapis.com/css?family=Sen&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -17,7 +18,7 @@
 			<form class="form-search">
 				<div class="wrapper__search">
 					<div class="input" style="display: block;">
-						<label>Звідки
+						<label>From
 							<input type="text" class="input__cities-from" required>
 						</label>
 						<ul class="dropdown dropdown__cities-from">
@@ -26,7 +27,7 @@
 					</div>
 
 					<div class="input">
-						<label>Куди
+						<label>To
 							<input type="text" class="input__cities-to" required>
 						</label>
 						<ul class="dropdown dropdown__cities-to">
@@ -35,7 +36,7 @@
 					</div>
 
 					<div class="input input__cities-from">
-						<label>Відправлення
+						<label>Departure date
 							<input type="date" class="input__date-depart" required>
 						</label>
 					</div>
@@ -43,21 +44,28 @@
 
 				<div class="wrapper__button">
 					<button type="submit" class="button button__search">
-						<span class="button__search-text">Знайти білети</span>
+						<span class="button__search-text">Find tickets</span>
 					</button>
 				</div>
 			</form>
 		</section>
 		<section class="wrapper">
 			<section class="wrapper__ticket" id="cheapest-ticket">
-				<!-- <h2>Найдешевший білет на вибрану дату</h2> -->
+
 			</section> 
 
 			<section class="block__ticket" id="other-cheap-tickets">
-				<!-- <h2>Найдешевші білети на інші дати</h2>  -->
+
 			</section>
 		</section>
 
+		<div id="modal-window" class="modal">
+			<div class="modal-content">
+			  <span class="modal-close">&times;</span>
+			  <!-- <p class="modal-text">No flights in this direction.</p> -->
+			  <p class="modal-text"></p>
+			</div>
+		 </div>
 
 	</main>
 	<script src="script.js"></script>
