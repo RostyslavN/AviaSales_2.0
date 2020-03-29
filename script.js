@@ -16,7 +16,7 @@ const citiesApi = 'http://api.travelpayouts.com/data/en/cities.json',
 // const citiesApi = 'dataBase/cities(en).json',
 	proxy = 'https://cors-anywhere.herokuapp.com/',
 	API_KEY = 'fb83fbb51ec78362a1f00aafeb7e5439',
-	calendar = 'http://min-prices.aviasales.ru/calendar_preload',
+	calendar = 'https://min-prices.aviasales.ru/calendar_preload',
 	MAX_COUNT = 5;
 
 let city = [];
