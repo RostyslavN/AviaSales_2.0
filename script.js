@@ -194,8 +194,8 @@ dropdownCitiesTo.addEventListener('click', (event) => {
 formSearch.addEventListener('submit', (event) => {
 	event.preventDefault();
 	const formData = {
-		from: city.find(item => inputCitiesFrom.value === item.name),
-		to: city.find(item => inputCitiesTo.value === item.name),
+		from: city.find(item => inputCitiesFrom.value === `${item.name}, ${item.code}`),
+		to: city.find(item => inputCitiesTo.value === `${item.name}, ${item.code}`),
 		when: inputDateDepart.value,
 	}
 

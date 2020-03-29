@@ -264,6 +264,26 @@ input {
 	margin: 50px 0;
 }
 
+footer {
+	margin: 0 auto;
+	margin-top: 30%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.facebook {
+	width: 20px;
+	height: 20px;
+	margin-right: 10px;
+	margin-left: 40px;
+}
+
+.telegram {
+	width: 25px;
+	height: 25px;
+}
+
 .modal {
 	display: none;
 	position: fixed;
@@ -275,6 +295,7 @@ input {
 	background-color: rgba(0,0,0,0.4);
  
 }
+
 .modal-content {
 	position: relative;
 	text-align: center;
@@ -288,22 +309,26 @@ input {
 	box-sizing: border-box;
 	animation: animatetop .4s;
 }
+
 .modal-text {
 	margin: 10px;
 	margin-top: 25px;
 }
+
 .modal-close {
 	color: #aaa;
 	float: right;
 	font-size: 28px;
 	font-weight: bold;
 }
+
 .modal-close:hover,
 .modal-close:focus {
 	color: #fff;
 	text-decoration: none;
 	cursor: pointer;
 }
+
 @keyframes animatetop {
 	from {top:-300px; opacity:0}
 	to {top:0; opacity:1}
