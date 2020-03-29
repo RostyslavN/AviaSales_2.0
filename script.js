@@ -12,8 +12,8 @@ const formSearch = document.querySelector('.form-search'),
 	modalText = document.querySelector('.modal-text');
 
 //data:
-//const citiesApi = 'http://api.travelpayouts.com/data/en/cities.json',
-const citiesApi = 'dataBase/cities(en).json',
+const citiesApi = 'http://api.travelpayouts.com/data/en/cities.json',
+// const citiesApi = 'dataBase/cities(en).json',
 	proxy = 'https://cors-anywhere.herokuapp.com/',
 	API_KEY = 'fb83fbb51ec78362a1f00aafeb7e5439',
 	calendar = 'http://min-prices.aviasales.ru/calendar_preload',
@@ -231,7 +231,7 @@ modalClose.addEventListener('click', () => {
  });
 
 //functions call
-getData(/*proxy + */citiesApi, (data) => {
+getData(proxy + citiesApi, (data) => {
 	city = JSON.parse(data).filter((item) => item.name);
 
 	city.sort((a, b) => {
