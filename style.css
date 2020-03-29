@@ -1,3 +1,5 @@
+/* prefixed by https://autoprefixer.github.io (PostCSS: v7.0.26, autoprefixer: v9.7.3) */
+
 * {
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
@@ -266,10 +268,16 @@ input {
 
 footer {
 	margin: 0 auto;
-	margin-top: 30%;
+	margin-top: 25%;
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
-	justify-content: center;
-	align-items: center;
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center;
 }
 
 .facebook {
@@ -306,8 +314,10 @@ footer {
 	padding: 15px;
 	padding-top: 5px;
 	border-radius: 5px;
-	box-sizing: border-box;
-	animation: animatetop .4s;
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
+	-webkit-animation: animatetop .4s;
+	        animation: animatetop .4s;
 }
 
 .modal-text {
@@ -328,6 +338,11 @@ footer {
 	text-decoration: none;
 	cursor: pointer;
 }
+
+@-webkit-keyframes animatetop {
+	from {top:-300px; opacity:0}
+	to {top:0; opacity:1}
+ }
 
 @keyframes animatetop {
 	from {top:-300px; opacity:0}
